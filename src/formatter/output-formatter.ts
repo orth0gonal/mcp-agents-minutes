@@ -193,4 +193,135 @@ export class OutputFormatter {
 
     return lines.join('\n');
   }
+
+  /**
+   * Format summary in Korean with custom structure
+   * Maximum 1000 words, comprehensive and concise
+   */
+  toKorean(summary: MeetingSummary, metadata: MeetingMetadata): string {
+    const lines: string[] = [];
+
+    // Meeting Details
+    lines.push('## Meeting Details');
+    if (metadata.date && metadata.title) {
+      // Format: YYMMDD Title (e.g., 251219 Arbitrum 파트너십 논의)
+      const dateStr = this.formatKoreanDate(metadata.date);
+      lines.push(`${dateStr} ${metadata.title}`);
+    } else if (metadata.date) {
+      lines.push(this.formatKoreanDate(metadata.date));
+    } else if (metadata.title) {
+      lines.push(metadata.title);
+    }
+    lines.push('');
+
+    // Attendees
+    lines.push('## Attendees');
+    if (metadata.attendees && metadata.attendees.length > 0) {
+      for (const attendee of metadata.attendees) {
+        lines.push(`- ${attendee}`);
+      }
+    }
+    lines.push('');
+
+    // Key Discussion Points
+    lines.push('## Key Discussion Points');
+    if (summary.key_points.length > 0) {
+      for (const point of summary.key_points) {
+        lines.push(`- ${point}`);
+      }
+    } else if (summary.topics_discussed.length > 0) {
+      for (const topic of summary.topics_discussed) {
+        lines.push(`- ${topic}`);
+      }
+    }
+
+    // Include decisions in key points if available
+    if (summary.decisions.length > 0) {
+      for (const decision of summary.decisions) {
+        lines.push(`- ${decision.decision}`);
+      }
+    }
+    lines.push('');
+
+    // Action Items - grouped by responsible person/organization
+    lines.push('## Action Items');
+    if (summary.action_items.length > 0) {
+      // Group action items by owner
+      const groupedItems = this.groupActionItemsByOwner(summary.action_items);
+
+      for (const [owner, items] of Object.entries(groupedItems)) {
+        if (owner !== 'unassigned') {
+          lines.push(`\n**${owner}:**`);
+        }
+        for (const item of items) {
+          let line = `- ${item.task}`;
+          if (item.deadline) {
+            line += ` (마감: ${item.deadline})`;
+          }
+          lines.push(line);
+        }
+      }
+    }
+    lines.push('');
+
+    // Next Steps/Meeting
+    lines.push('## Next Steps/Meeting');
+    if (summary.next_steps.length > 0) {
+      // Check if any next step mentions a follow-up meeting
+      const followUpMeeting = summary.next_steps.find((step) =>
+        /(?:next meeting|follow-up|reconvene|다음 회의|차기 회의)/i.test(step)
+      );
+
+      if (followUpMeeting) {
+        lines.push(followUpMeeting);
+      } else {
+        for (const step of summary.next_steps) {
+          lines.push(`- ${step}`);
+        }
+      }
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
+   * Format date in Korean format (YYMMDD)
+   */
+  private formatKoreanDate(dateStr: string): string {
+    try {
+      // Try to parse ISO format or other common formats
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        const yy = String(date.getFullYear()).slice(-2);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yy}${mm}${dd}`;
+      }
+    } catch (e) {
+      // If parsing fails, try to extract YYMMDD pattern from string
+      const match = dateStr.match(/(\d{2})(\d{2})(\d{2})/);
+      if (match) {
+        return `${match[1]}${match[2]}${match[3]}`;
+      }
+    }
+    // Return original if no formatting possible
+    return dateStr;
+  }
+
+  /**
+   * Group action items by owner/responsible person
+   */
+  private groupActionItemsByOwner(items: any[]): { [key: string]: any[] } {
+    const grouped: { [key: string]: any[] } = {};
+
+    for (const item of items) {
+      const owner = item.owner || 'unassigned';
+      if (!grouped[owner]) {
+        grouped[owner] = [];
+      }
+      grouped[owner].push(item);
+    }
+
+    return grouped;
+  }
 }

@@ -177,19 +177,24 @@ export class MeetingSummarizer {
 
   /**
    * Extract owner from action item text
+   * Supports English, Korean, and other Unicode names
    */
   private extractOwner(text: string): string | undefined {
-    // Look for @mentions
-    const mentionMatch = text.match(/@(\w+)/);
+    // Look for @mentions (alphanumeric including Unicode)
+    const mentionMatch = text.match(/@([\p{L}\p{N}_]+)/u);
     if (mentionMatch) return mentionMatch[1];
 
-    // Look for "assigned to" or "owner:"
-    const assignedMatch = text.match(/(?:assigned to|owner:)\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i);
+    // Look for "assigned to" or "owner:" with Unicode name support
+    const assignedMatch = text.match(/(?:assigned to|owner:)\s*([\p{L}][\p{L}\s]*)/iu);
     if (assignedMatch) return assignedMatch[1].trim();
 
-    // Look for "Name will..."
-    const willMatch = text.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+will\s+/);
+    // Look for "Name will..." with Unicode support
+    const willMatch = text.match(/^([\p{L}][\p{L}\s]{0,20}?)\s+(?:will|to)\s+/iu);
     if (willMatch) return willMatch[1].trim();
+
+    // Look for Korean/Unicode name patterns before action verbs
+    const koreanMatch = text.match(/([\p{L}]{2,10})\s+(?:will|to|should|needs?|must)/iu);
+    if (koreanMatch) return koreanMatch[1].trim();
 
     return undefined;
   }

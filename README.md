@@ -7,8 +7,9 @@ An intelligent MCP (Model Context Protocol) server that processes meeting record
 - 📝 **Comprehensive Summarization**: Extracts overview, key points, decisions, and next steps
 - ✅ **Action Item Extraction**: Identifies tasks with owners, deadlines, and priorities
 - 🎯 **Decision Tracking**: Captures decisions with context and timestamps
-- 📊 **Multiple Output Formats**: JSON, Markdown, and plain text
-- 🔍 **Smart Parsing**: Detects speakers, topics, and meeting structure
+- 📊 **Multiple Output Formats**: JSON, Markdown, Plain Text, and **Korean structured format**
+- 🌏 **Korean Language Support**: Full support for Korean names and content with custom format
+- 🔍 **Smart Parsing**: Detects speakers, topics, and meeting structure (supports Unicode)
 - ⚡ **Fast Processing**: Handles typical meetings (<10K words) in <2 seconds
 
 ## Installation
@@ -80,7 +81,7 @@ Generates a comprehensive meeting summary including:
 **Parameters:**
 - `transcript` (string, required): Meeting transcript text
 - `metadata` (object, optional): Meeting metadata (date, attendees, duration, title)
-- `format` (enum, optional): Output format - `json`, `markdown`, or `text` (default: `markdown`)
+- `format` (enum, optional): Output format - `json`, `markdown`, `text`, or `korean` (default: `markdown`)
 
 ### 2. `extract_action_items`
 
@@ -92,11 +93,13 @@ Extracts action items from meeting transcripts with:
 
 **Parameters:**
 - `transcript` (string, required): Meeting transcript text
-- `format` (enum, optional): Output format - `json`, `markdown`, or `text` (default: `json`)
+- `format` (enum, optional): Output format - `json`, `markdown`, `text`, or `korean` (default: `json`)
 
 ## Usage Examples
 
 See [examples/usage.md](examples/usage.md) for detailed usage examples and integration patterns.
+
+For Korean format examples, see [examples/korean-format-example.md](examples/korean-format-example.md).
 
 ### Quick Example
 
@@ -199,6 +202,14 @@ Action: @Bob to complete authentication by Friday (high priority).
 - Clean, simple formatting
 - Compatible with any text viewer
 - Great for email and plain text environments
+
+### Korean Format
+- Structured specifically for Korean business meetings
+- Date format: YYMMDD (e.g., 251219)
+- Action items grouped by responsible person/organization
+- Concise output (maximum 1000 words)
+- Sections: Meeting Details, Attendees, Key Discussion Points, Action Items, Next Steps/Meeting
+- Full Unicode support for Korean names
 
 ## Performance
 

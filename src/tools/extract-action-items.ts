@@ -12,9 +12,9 @@ import { MeetingTranscript, ActionItem } from '../types/index.js';
 export const ExtractActionItemsSchema = z.object({
   transcript: z.string().describe('The meeting transcript text to analyze'),
   format: z
-    .enum(['json', 'markdown', 'text'])
+    .enum(['json', 'markdown', 'text', 'korean'])
     .default('json')
-    .describe('Output format (json, markdown, or text)'),
+    .describe('Output format (json, markdown, text, or korean)'),
 });
 
 export type ExtractActionItemsInput = z.infer<typeof ExtractActionItemsSchema>;
@@ -55,6 +55,8 @@ export class ExtractActionItemsTool {
           return this.formatAsMarkdown(summary.action_items);
         case 'text':
           return this.formatAsText(summary.action_items);
+        case 'korean':
+          return this.formatAsKorean(summary.action_items);
         default:
           return JSON.stringify({ action_items: summary.action_items }, null, 2);
       }
@@ -113,6 +115,43 @@ export class ExtractActionItemsTool {
   }
 
   /**
+   * Format action items in Korean format (grouped by owner)
+   */
+  private formatAsKorean(items: ActionItem[]): string {
+    if (items.length === 0) {
+      return '## Action Items\n';
+    }
+
+    const lines: string[] = ['## Action Items'];
+
+    // Group items by owner
+    const grouped: { [key: string]: ActionItem[] } = {};
+    for (const item of items) {
+      const owner = item.owner || 'unassigned';
+      if (!grouped[owner]) {
+        grouped[owner] = [];
+      }
+      grouped[owner].push(item);
+    }
+
+    // Format grouped items
+    for (const [owner, ownerItems] of Object.entries(grouped)) {
+      if (owner !== 'unassigned') {
+        lines.push(`\n**${owner}:**`);
+      }
+      for (const item of ownerItems) {
+        let line = `- ${item.task}`;
+        if (item.deadline) {
+          line += ` (마감: ${item.deadline})`;
+        }
+        lines.push(line);
+      }
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
    * Get emoji representation of priority
    */
   private getPriorityEmoji(priority: 'high' | 'medium' | 'low'): string {
@@ -143,9 +182,9 @@ export class ExtractActionItemsTool {
           },
           format: {
             type: 'string',
-            enum: ['json', 'markdown', 'text'],
+            enum: ['json', 'markdown', 'text', 'korean'],
             default: 'json',
-            description: 'Output format (json, markdown, or text)',
+            description: 'Output format (json, markdown, text, or korean for Korean grouped format)',
           },
         },
         required: ['transcript'],

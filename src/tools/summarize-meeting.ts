@@ -23,9 +23,9 @@ export const SummarizeMeetingSchema = z.object({
     .optional()
     .describe('Optional meeting metadata'),
   format: z
-    .enum(['json', 'markdown', 'text'])
+    .enum(['json', 'markdown', 'text', 'korean'])
     .default('markdown')
-    .describe('Output format (json, markdown, or text)'),
+    .describe('Output format (json, markdown, text, or korean)'),
 });
 
 export type SummarizeMeetingInput = z.infer<typeof SummarizeMeetingSchema>;
@@ -67,6 +67,8 @@ export class SummarizeMeetingTool {
           return this.formatter.toJSON(summary, parsed.metadata);
         case 'text':
           return this.formatter.toPlainText(summary, parsed.metadata);
+        case 'korean':
+          return this.formatter.toKorean(summary, parsed.metadata);
         case 'markdown':
         default:
           return this.formatter.toMarkdown(summary, parsed.metadata);
@@ -122,9 +124,9 @@ export class SummarizeMeetingTool {
           },
           format: {
             type: 'string',
-            enum: ['json', 'markdown', 'text'],
+            enum: ['json', 'markdown', 'text', 'korean'],
             default: 'markdown',
-            description: 'Output format (json, markdown, or text)',
+            description: 'Output format (json, markdown, text, or korean for Korean structured format)',
           },
         },
         required: ['transcript'],
