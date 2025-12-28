@@ -37,7 +37,35 @@ npm install
 npm run build
 ```
 
-4. Configure Claude Code to use the server (see [Configuration](#configuration))
+4. (Optional) Install CLI globally:
+```bash
+npm link
+```
+
+5. Configure Claude Code to use the server (see [Configuration](#configuration))
+
+## Quick Start - CLI Usage
+
+The fastest way to get started is using the CLI:
+
+```bash
+# Install globally
+npm link
+
+# Summarize a meeting (Korean format by default)
+meeting-summary ./path/to/meeting.txt
+
+# Save to file
+meeting-summary ./meeting.txt -o summary.md
+
+# Add a note
+meeting-summary ./meeting.txt -n "Follow-up required"
+
+# Use different format
+meeting-summary ./meeting.txt --format json
+```
+
+See [CLI Usage](#cli-usage) for detailed options.
 
 ## Configuration
 
@@ -116,12 +144,96 @@ For Korean format examples, see [examples/korean-format-example.md](examples/kor
 }
 ```
 
+## CLI Usage
+
+### Installation
+
+Install the CLI globally to use the `meeting-summary` command anywhere:
+
+```bash
+npm link
+```
+
+### Basic Usage
+
+```bash
+meeting-summary <file-path> [options]
+```
+
+### Options
+
+| Option | Shorthand | Description | Default |
+|--------|-----------|-------------|---------|
+| `--format <type>` | `-f` | Output format: korean, json, markdown, text | korean |
+| `--output <path>` | `-o` | Save output to file instead of console | - |
+| `--note <text>` | `-n` | Add a note to the summary | - |
+| `--help` | `-h` | Show help message | - |
+
+### Examples
+
+**Basic usage (Korean format to console):**
+```bash
+meeting-summary ./meetings/2025-12-19-meeting.txt
+```
+
+**Save to file:**
+```bash
+meeting-summary ./meetings/meeting.txt -o ./summaries/summary.md
+```
+
+**Add a note:**
+```bash
+meeting-summary ./meetings/meeting.txt -n "중요: 모든 액션 아이템 완료 필요"
+```
+
+**Different output format:**
+```bash
+meeting-summary ./meetings/meeting.txt --format json
+```
+
+**Combine options:**
+```bash
+meeting-summary ./meetings/meeting.txt \
+  -f korean \
+  -o ./summaries/summary.md \
+  -n "Follow-up required by EOW"
+```
+
+### CLI Output
+
+The CLI provides:
+- ✅ **Summary output** (to console or file)
+- 📊 **Statistics** (attendees, key points, decisions, action items)
+- ❌ **Clear error messages** for debugging
+
+**Example output:**
+```
+## Meeting Details
+251219 Arbitrum 파트너십 논의
+...
+
+📊 Summary Statistics:
+   File: meeting.txt
+   Attendees: 4
+   Key Points: 5
+   Decisions: 2
+   Action Items: 4
+```
+
+### CLI vs MCP Server
+
+- **CLI**: Best for quick one-off summarization, scripting, automation
+- **MCP Server**: Best for integration with Claude Code, interactive use
+
+Both use the same underlying engine and produce identical results.
+
 ## Project Structure
 
 ```
 mcp_workflow/
 ├── src/
 │   ├── index.ts              # MCP server entry point
+│   ├── cli.ts                # CLI entry point
 │   ├── types/                # TypeScript type definitions
 │   ├── parser/               # Meeting transcript parser
 │   ├── summarizer/           # Summarization engine
@@ -133,6 +245,7 @@ mcp_workflow/
 ├── examples/                 # Usage examples and documentation
 ├── PRD.md                    # Product requirements document
 ├── AGENT.md                  # Development memory and context
+├── USAGE_GUIDE.md            # Detailed usage guide
 └── README.md                 # This file
 ```
 

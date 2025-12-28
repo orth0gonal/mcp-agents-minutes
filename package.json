@@ -4,10 +4,14 @@
   "description": "MCP server for intelligent meeting minutes summarization",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "meeting-summary": "./dist/cli.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
+    "cli": "node dist/cli.js",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src/**/*.ts",
