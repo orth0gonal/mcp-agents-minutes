@@ -1,0 +1,38 @@
+Title: Arbitrum 파트너십 논의
+Date: 2025-12-19
+Attendees: 김철수 (CTO), 이영희 (마케팅 팀장), 박민준 (개발팀장), 최지훈 (프로덕트 매니저)
+Duration: 45 minutes
+
+김철수: 안녕하세요. 오늘은 Arbitrum과의 파트너십에 대해 논의하겠습니다. 현재 시장 상황을 고려할 때 L2 솔루션 통합이 필요한 시점입니다.
+
+이영희: 맞습니다. 경쟁사들도 이미 L2를 도입했고, 우리도 빠르게 움직여야 합니다. 마케팅 측면에서 Arbitrum은 브랜드 인지도가 높아 좋은 선택입니다.
+
+박민준: 기술적으로는 충분히 가능합니다. 다만 통합 일정을 명확히 해야 합니다. 개발 리소스를 고려하면 최소 2개월은 필요합니다.
+
+Decision: 2026년 1월부터 Arbitrum 메인넷 통합 프로젝트를 시작하기로 결정했습니다.
+
+최지훈: 프로젝트 계획서가 필요합니다. 김철수님께서 기술 제안서를 작성해주시면 좋겠습니다.
+
+Action: 김철수 will prepare technical partnership proposal by next Friday (high priority)
+
+이영희: 저는 마케팅 전략을 수립하겠습니다. Arbitrum 커뮤니티와의 협력 방안도 포함하겠습니다.
+
+Action: 이영희 to create comprehensive marketing strategy by December 25th
+
+박민준: 개발팀 리소스 계획도 필요합니다. 현재 진행 중인 프로젝트들과 조율이 필요합니다.
+
+Action: 박민준 should prepare development resource allocation plan by next Tuesday
+
+최지훈: 테스트넷 배포 일정도 잡아야 합니다. 메인넷 전에 충분한 테스트가 필요합니다.
+
+김철수: 좋습니다. 1월 중순에 테스트넷 배포를 목표로 하겠습니다.
+
+Decision: 테스트넷 배포는 2026년 1월 15일을 목표로 진행
+
+이영희: Arbitrum 재단과의 공식 발표 일정도 조율해야 합니다.
+
+Action: 이영희 to coordinate with Arbitrum Foundation for joint announcement by January 10th
+
+김철수: 다음 회의에서는 각자 준비한 계획서를 공유하고 구체적인 타임라인을 확정하겠습니다.
+
+Next meeting: 2026년 1월 5일 오후 2시, 온라인 회의

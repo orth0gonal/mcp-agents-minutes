@@ -13,10 +13,12 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { SummarizeMeetingTool } from './tools/summarize-meeting.js';
 import { ExtractActionItemsTool } from './tools/extract-action-items.js';
+import { SummarizeMeetingFileTool } from './tools/summarize-meeting-file.js';
 
 // Initialize tools
 const summarizeMeetingTool = new SummarizeMeetingTool();
 const extractActionItemsTool = new ExtractActionItemsTool();
+const summarizeMeetingFileTool = new SummarizeMeetingFileTool();
 
 // Create MCP server
 const server = new Server(
@@ -38,6 +40,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       SummarizeMeetingTool.getDefinition(),
+      SummarizeMeetingFileTool.getDefinition(),
       ExtractActionItemsTool.getDefinition(),
     ],
   };
@@ -53,6 +56,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (name) {
       case 'summarize_meeting': {
         const result = await summarizeMeetingTool.execute(args as any);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: result,
+            },
+          ],
+        };
+      }
+
+      case 'summarize_meeting_file': {
+        const result = await summarizeMeetingFileTool.execute(args as any);
         return {
           content: [
             {
